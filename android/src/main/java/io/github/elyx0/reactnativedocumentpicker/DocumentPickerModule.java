@@ -176,8 +176,11 @@ public class DocumentPickerModule extends ReactContextBaseJavaModule {
 
 	private WritableMap getMetadata(Uri uri) {
 		WritableMap map = Arguments.createMap();
-
-		map.putString(FIELD_URI, uri.toString());
+		try {
+			map.putString(FIELD_URI, RealPathUtil.getRealPathFromURI(this.getCurrentActivity(), uri));
+		}catch (Exception e) {
+			promise.reject(E_UNEXPECTED_EXCEPTION, e.getLocalizedMessage(), e);
+		}
 
 		ContentResolver contentResolver = getReactApplicationContext().getContentResolver();
 
